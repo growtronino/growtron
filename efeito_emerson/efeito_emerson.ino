@@ -1,0 +1,243 @@
+/*
+Este exemplo requer:
+ESP32 WIFI
+DHT22 ou DHT11
+RELE de 2 canais no minimo
+Blynk App
+*/
+
+#define BLYNK_PRINT Serial    // Comente isto para desabilitar prints e economizar espaco
+
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <BlynkSimpleEsp32.h>
+#include <DHT.h>
+#include <Time.h>
+#include <TimeAlarms.h>
+#include <WidgetRTC.h>
+
+// BLYNK AUTHENTICATION
+char auth[] = "codigo de autenticacao blynk";
+char ssid[] = "nome da rede wifi";
+char pass[] = "senha da rede wifi";
+
+// DHT TEMPERATURE AND HUMIDIDTY
+#define DHTPIN 15     // definicao do pino do sensor de umidade e temperatura dht
+#define DHTTYPE DHT22 // mudar para DHT11 caso esteja usando outra versao do sensor
+DHT dht(DHTPIN, DHTTYPE);
+
+// TIMER, ALARMS AND RTC
+BlynkTimer timer;     // usamos o timer do blynk
+WidgetRTC rtc;        // o real time clock do blynk nos da o horario atualizado via wifi
+
+int periodo = 2 * 60; // tempo do efeito emmerson em segundos
+WidgetLED ledEmersonMorning(V7);
+WidgetLED ledMain(V8);
+WidgetLED ledEmersonAfternoon(V9);
+bool morning = true;  
+
+// RELAY
+const int LEDS = 16;     
+const int LED_EMMERSON = 18;
+
+// evento chamado a cada 5 segundos para atualizar o display do relogio
+void alarmTimerEvent() {
+  digitalClockDisplay();  // debug do horario
+  Alarm.delay(0);   // necesario para sincronizacao do alarme
+  
+  String currentTime = String(hour()) + ":" + minute() + ":" + second();
+  // atualizo um label no blynk para saber se o horario esta correto
+  // necessario somente para testes
+  Blynk.virtualWrite(V0, currentTime); 
+}
+
+// isso e chamado quando o esp32 se conecta ao blynk server
+BLYNK_CONNECTED() {
+  rtc.begin();        // iniciamos o real time clock do blynk
+  Alarm.delay(1000);  // necessario para os alarmes ficarem sincronizados
+}
+
+// isto e chamado pelo blynk quando um virtual pin e alterado no app
+// nesse caso o v2 virtual pin 2 esta configurado no widget de time input
+// com start-stop time, para ter um alarme de inicio e fim do fotoperiodo
+BLYNK_WRITE(V2) {
+  TimeInputParam t(param);
+
+  String tempStart;
+  String tempStop;
+  
+  // processa o horario de acender os LEDs
+  if (t.hasStartTime()) {
+    Alarm.free(0);
+    Alarm.alarmRepeat(t.getStartHour(),
+                      t.getStartMinute(),
+                      t.getStartSecond(), 
+                      LEDInitialAlarm);
+
+    // armazena em segundos o horario que os LEDs acende
+    int startTimeSeconds = Alarm.read(0);
+    Alarm.enable(1);
+    // configura o inicio do efeito emerson subtraindo o periodo do efeito do horario dos LEDs acender
+    Alarm.write(1, startTimeSeconds - periodo);
+    Alarm.enable(2);
+    // configura o fim do efeito emerson para o horario que os LEDs acendem
+    Alarm.write(2, startTimeSeconds);
+
+    // debug do horario do efeito emerson para efeito de destes
+    Blynk.virtualWrite(V3, (String)(startTimeSeconds - periodo) + " - " + (String)startTimeSeconds);
+    tempStart = (String)t.getStartHour() + ":" + (String)t.getStartMinute(); 
+    Serial.println(String("Start: ") + t.getStartHour() + ":" + t.getStartMinute() + ":" + t.getStartSecond());
+  }
+
+  // processa o horario de desligar os LEDs
+  if (t.hasStopTime()) {    
+    Alarm.free(3);
+    Alarm.alarmRepeat(t.getStopHour(),
+                      t.getStopMinute(),
+                      t.getStopSecond(), 
+                      LEDFinalAlarm);
+                      
+    int stopTimeSeconds = Alarm.read(3);
+    Alarm.enable(4);
+    // configura o inicio do efeito emerson para o horario que os LEDs apagam
+    Alarm.write(4, stopTimeSeconds);
+    Alarm.enable(5);
+    // configura o fim do efeito emerson para o horario que os LEDs apagam mais o periodo do efeito
+    Alarm.write(5, stopTimeSeconds + periodo);
+
+    // debug do horario do efeito emerson para efeito de destes
+    Blynk.virtualWrite(V4, (String)stopTimeSeconds + " - " + (String)(stopTimeSeconds + periodo));
+    tempStop = (String)t.getStopHour() + ":" + ((t.getStopMinute() < 10) ? "0" + (String)t.getStopMinute() : (String)t.getStopMinute());
+    Serial.println(String("Stop: ") + t.getStopHour() + ":" + t.getStopMinute() + ":" + t.getStopSecond());
+  }
+
+  // debug do fotoperiodo no blynk para efeito de testes 
+  Blynk.virtualWrite(V1, tempStart + " - " + tempStop);
+}
+
+// esse evento e chamado a cada segundo para se ter um dado robusto 
+// de umidade e temperatura a mostrar no graph do blynk. o graph do blynk
+// usa automaticamente os valores dos virtual pins para gerar os graficos
+// nao havendo necessidade de codificar 
+void dhtTimerEvent() {
+  float h = dht.readHumidity();
+  float t = dht.readTemperature(); // ou dht.readTemperature(true) para Fahrenheit
+
+  // verificamos caso o sensor tenha gerado um dado descartavel
+  if (isnan(h) || isnan(t)) {
+    Serial.println("Failed to read from DHT22 sensor!");
+    return;
+  }
+
+  // atualizamos a umidade
+  Blynk.virtualWrite(V5, h);
+  // e atualizamos a temperatura
+  Blynk.virtualWrite(V6, t);
+}
+
+void setup() {
+Serial.begin(9600);
+
+  Blynk.begin(auth, ssid, pass);
+
+  setSyncInterval(10 * 60);   // intervalo de sincronizacao do horario a cada 10 minutos(em segundos)
+  setTime(hour(),minute(),second(),month(),day(),year());
+  Serial.print("setup RTC Updated Time ");
+//  timer.setInterval(1000L, dhtTimerEvent);    // Chamado a cada segundo
+  timer.setInterval(5000L, alarmTimerEvent);  // display digital atualiza a cada 5 segundos
+  digitalClockDisplay();
+
+  // inicializa o sensor de umidade e temperatura dht
+//  dht.begin();          
+
+  // inicializamos os alarmes e reles
+  setupAlarms();
+  setupRelays();
+}
+
+// usando o blynk e importante nao usar o loop
+// caso precise de um loop, use os timer event
+void loop() {
+  Blynk.run();
+  timer.run();
+}
+
+// aciona os reles para acender o LED
+void LEDInitialAlarm() {
+  digitalWrite(LEDS, HIGH);
+
+  ledMain.on();
+}
+
+// aciona os reles para desligar o LED
+void LEDFinalAlarm() {
+  digitalWrite(LEDS, LOW);
+
+  ledMain.off();
+  morning = false;
+}
+
+// aciona os reles para ligar o efeito emmerson
+void EmmersonInitialAlarm() {
+  digitalWrite(LED_EMMERSON, HIGH);
+
+  if (morning) {
+    ledEmersonMorning.on();
+  } else {
+    ledEmersonAfternoon.on();
+  }
+}
+
+// aciona os reles para desligar o efeito emmerson
+void EmmersonFinalAlarm() {
+  digitalWrite(LED_EMMERSON, LOW);
+
+  if (morning) {
+    ledEmersonMorning.off();
+  } else {
+    ledEmersonAfternoon.off();
+    morning = true;
+  }
+}
+
+// configuracao inicial dos alarmes atribuindo seus IDs e funcoes atreladas
+void setupAlarms() {
+  Alarm.alarmRepeat(0, 0, 0, LEDInitialAlarm);
+  Alarm.alarmRepeat(0, 0, 0, EmmersonInitialAlarm);
+  Alarm.alarmRepeat(0, 0, 0, EmmersonFinalAlarm);
+  Alarm.alarmRepeat(0, 0, 0, LEDFinalAlarm);
+  Alarm.alarmRepeat(0, 0, 0, EmmersonInitialAlarm);
+  Alarm.alarmRepeat(0, 0, 0, EmmersonFinalAlarm);
+  
+  Alarm.disable(0);
+  Alarm.disable(1);
+  Alarm.disable(2);
+  Alarm.disable(3);
+  Alarm.disable(4);
+  Alarm.disable(5);
+}
+
+// configuracao inicial dos reles
+void setupRelays() {
+  pinMode(LEDS, OUTPUT);
+  pinMode(LED_EMMERSON, OUTPUT);
+  
+  digitalWrite(LEDS, LOW);
+  digitalWrite(LED_EMMERSON, LOW);
+}
+
+// debug do relogio
+void digitalClockDisplay() {
+  Serial.print(hour());
+  printDigits(minute());
+  printDigits(second());
+  Serial.println(); 
+}
+
+// metodo que auxilia a printar o horario 
+void printDigits(int digits) {
+  Serial.print(":");
+  if(digits < 10)
+    Serial.print('0');
+  Serial.print(digits);
+}
