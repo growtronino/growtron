@@ -26,12 +26,7 @@ const int LEDS = D5;
 const int LED_EMMERSON = D6;
 
 
-int periodo = 2 * 60; // tempo do efeito emmerson em segundos
-WidgetLED ledEmersonMorning(V7);
-WidgetLED ledMain(V8);
-WidgetLED ledEmersonAfternoon(V9);
-bool morning = true;  
-
+int periodo = 2 * 60; // tempo do efeito emmerson em segundos 
 
 // evento chamado a cada 5 segundos para atualizar o display do relogio
 void alarmTimerEvent() {
@@ -158,39 +153,21 @@ void loop() {
 // aciona os reles para acender o LED
 void LEDInitialAlarm() {
   digitalWrite(LEDS, HIGH);
-
-  ledMain.on();
 }
 
 // aciona os reles para desligar o LED
 void LEDFinalAlarm() {
   digitalWrite(LEDS, LOW);
-
-  ledMain.off();
-  morning = false;
 }
 
 // aciona os reles para ligar o efeito emmerson
 void EmmersonInitialAlarm() {
   digitalWrite(LED_EMMERSON, HIGH);
-
-  if (morning) {
-    ledEmersonMorning.on();
-  } else {
-    ledEmersonAfternoon.on();
-  }
 }
 
 // aciona os reles para desligar o efeito emmerson
 void EmmersonFinalAlarm() {
   digitalWrite(LED_EMMERSON, LOW);
-
-  if (morning) {
-    ledEmersonMorning.off();
-  } else {
-    ledEmersonAfternoon.off();
-    morning = true;
-  }
 }
 
 // configuracao inicial dos alarmes atribuindo seus IDs e funcoes atreladas
