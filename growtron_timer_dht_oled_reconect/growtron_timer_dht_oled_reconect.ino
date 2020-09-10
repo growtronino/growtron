@@ -1,11 +1,3 @@
-/*
-Este exemplo requer:
-ESP32 WIFI
-DHT22 ou DHT11
-RELE de 2 canais no minimo
-Blynk App
-*/
-
 #define BLYNK_PRINT Serial    // Comente isto para desabilitar prints e economizar espaco
 
 #include <WiFi.h>
@@ -34,11 +26,13 @@ DHT dht(DHTPIN, DHTTYPE);
 BlynkTimer timer;     // usamos o timer do blynk
 WidgetRTC rtc;        // o real time clock do blynk nos da o horario atualizado via wifi
 
-int periodo = 2 * 60; // tempo do efeito emmerson em segundos
+int periodo = 1 * 60; // tempo do efeito emmerson em segundos
 WidgetLED ledEmersonMorning(V7);
 WidgetLED ledMain(V8);
 WidgetLED ledEmersonAfternoon(V9);
 bool morning = true;  
+int emersonValue;
+int tempEmersonValue = HIGH;
 
 // RELAY
 const int LEDS = 33;     
@@ -58,42 +52,6 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);//Adafr
 
 #define LOGO16_GLCD_HEIGHT 16 // do not change this. Error in video
 #define LOGO16_GLCD_WIDTH  16 // do not change this. Error in video
-
-//#define LOGO_HEIGHT   32
-//#define LOGO_WIDTH    32
-//static const unsigned char PROGMEM logo_bmp[] =
-//{ B00000000,B00000001,B10000000,B00000000,
-//  B00000000,B00000001,B10000000,B00000000,
-//  B00000000,B00000001,B10000000,B00000000,
-//  B00000000,B00000001,B10000000,B00000000,
-//  B00000000,B00000011,B11000000,B00000000,
-//  B00000000,B00000011,B11000000,B00000000,
-//  B00000000,B00000111,B11100000,B00000000,
-//  B00000000,B00000111,B11100000,B00000000,
-//  B00000000,B00000111,B11100000,B00000000,
-//  B00000000,B00001111,B11110000,B00000000,
-//  B00000000,B00001111,B11110000,B00000000,
-//  B11000000,B00001111,B11110000,B00000011,
-//  B01111000,B00001111,B11110000,B00001110,
-//  B01111110,B00001111,B11110000,B01111110,
-//  B00111111,B10001111,B11110001,B11111100,
-//  B00111111,B11001111,B11110011,B11111100,
-//  B00011111,B11101111,B11110111,B11111000,
-//  B00011111,B11110111,B11101111,B11111000,
-//  B00001111,B11111111,B11111111,B11110000,
-//  B00000111,B11111111,B11111111,B11100000,
-//  B00000011,B11111111,B11111111,B11000000,
-//  B00000001,B11111111,B11111111,B10000000,
-//  B00000000,B11111111,B11111111,B00000000,
-//  B00000011,B11111111,B11111111,B11000000,
-//  B00001111,B11111111,B11111111,B11110000,
-//  B00111111,B11111111,B11111111,B11111100,
-//  B00001111,B11111111,B11111111,B11110000,
-//  B00000001,B11111111,B11111111,B10000000,
-//  B00000000,B00111110,B01111100,B00000000,
-//  B00000000,B00111100,B00111100,B00000000,
-//  B00000000,B01111000,B00011110,B00000000,
-//  B00000000,B01000000,B00000010,B00000000};
 
 #define LOGO_HEIGHT   25
 #define LOGO_WIDTH    25
@@ -133,17 +91,44 @@ static const unsigned char PROGMEM logo_bmp[] =
 void alarmTimerEvent() {
   digitalClockDisplay();  // debug do horario
   Alarm.delay(0);   // necesario para sincronizacao do alarme
-  
-  String currentTime = String(hour()) + ":" + minute() + ":" + second();
-  // atualizo um label no blynk para saber se o horario esta correto
-  // necessario somente para testes
-  Blynk.virtualWrite(V0, currentTime); 
 }
 
 // isso e chamado quando o esp32 se conecta ao blynk server
 BLYNK_CONNECTED() {
   rtc.begin();        // iniciamos o real time clock do blynk
   Alarm.delay(1000);  // necessario para os alarmes ficarem sincronizados
+}
+
+BLYNK_WRITE(V1) {
+  emersonValue = param.asInt();
+  
+  if (emersonValue == LOW) {
+    Serial.println("Efeito Emerson desativado, desligar o deep red.");
+    tempEmersonValue = LOW;
+    ledEmersonMorning.off();
+    ledEmersonAfternoon.off();
+  } else {
+    // verificar se esta dentro do periodo para ligar ou desligar o efeito e seus feedbacks
+    long timeInSeconds = (hour() * 60 * 60) + (minute() * 60) + second();
+    if (timeInSeconds >= Alarm.read(1) && timeInSeconds <= Alarm.read(0) ||
+        timeInSeconds >= Alarm.read(2) && timeInSeconds <= Alarm.read(3)) {
+      Serial.println("Ativado, dentro do Efeito Emerson, ligar o deep red.");
+      tempEmersonValue = HIGH;
+      if (morning) {
+        ledEmersonMorning.on();
+        ledEmersonAfternoon.off();
+      } else {
+        ledEmersonMorning.off();
+        ledEmersonAfternoon.on();
+      }
+    } else {
+      Serial.println("Ativado, fora do Efeito Emerson, desligar o deep red.");
+      ledEmersonMorning.off();
+      ledEmersonAfternoon.off();
+      tempEmersonValue = LOW;
+    }
+  }
+  digitalWrite(LED_EMMERSON, tempEmersonValue);
 }
 
 // isto e chamado pelo blynk quando um virtual pin e alterado no app
@@ -160,33 +145,33 @@ BLYNK_WRITE(V2) {
                       t.getStartSecond(), 
                       LEDInitialAlarm);
 
-    Alarm.enable(1);
-    // configura o inicio do efeito emerson subtraindo o periodo do efeito do horario dos LEDs acender
-    Alarm.write(1, Alarm.read(0) - periodo);
-    Alarm.enable(2);
-    // configura o fim do efeito emerson para o horario que os LEDs acendem
-    Alarm.write(2, Alarm.read(0));
+    if (emersonValue == HIGH) {
+      Alarm.enable(1);
+      // configura o inicio do efeito emerson subtraindo 
+      // o periodo do efeito do horario dos LEDs acender
+      Alarm.write(1, Alarm.read(0) - periodo);
+    }
   }
 
   // processa o horario de desligar os LEDs
   if (t.hasStopTime()) {    
-    Alarm.free(3);
+    Alarm.free(2);
     Alarm.alarmRepeat(t.getStopHour(),
                       t.getStopMinute(),
                       t.getStopSecond(), 
                       LEDFinalAlarm);
-                      
-    Alarm.enable(4);
-    // configura o inicio do efeito emerson para o horario que os LEDs apagam
-    Alarm.write(4, Alarm.read(3));
-    Alarm.enable(5);
-    // configura o fim do efeito emerson para o horario que os LEDs apagam mais o periodo do efeito
-    Alarm.write(5, Alarm.read(3) + periodo);
+
+    if (emersonValue == HIGH) {
+      Alarm.enable(3);
+      // configura o fim do efeito emerson para o horario 
+      // que os LEDs apagam mais o periodo do efeito
+      Alarm.write(3, Alarm.read(2) + periodo);
+    }
   }
 
   // sincroniza os reles de acordo com o horario atual
   // e o fotoperiodo configurado
-  syncRelays((hour() * 60 * 60) + minute() * 60);
+  syncRelays((hour() * 60 * 60) + (minute() * 60) + second());
 }
 
 // esse evento e chamado a cada segundo para se ter um dado robusto 
@@ -232,7 +217,7 @@ Serial.begin(9600);
   setupAlarms();
   setupRelays();
 
-  Blynk.syncVirtual(V2);
+  Blynk.syncVirtual(V1, V2);
 }
 
 // usando o blynk e importante nao usar o loop
@@ -245,37 +230,49 @@ void loop() {
 // aciona os reles para acender o LED
 void LEDInitialAlarm() {
   digitalWrite(LEDS, HIGH);
-
   ledMain.on();
+
+  if (emersonValue == HIGH) {
+    EmmersonFinalAlarm();
+  }
 }
 
 // aciona os reles para desligar o LED
 void LEDFinalAlarm() {
   digitalWrite(LEDS, LOW);
-
   ledMain.off();
   morning = false;
+
+  if (emersonValue == HIGH) {
+    EmmersonInitialAlarm();
+  }
 }
 
 // aciona os reles para ligar o efeito emmerson
 void EmmersonInitialAlarm() {
-  digitalWrite(LED_EMMERSON, HIGH);
+  if (emersonValue == HIGH) {
+    digitalWrite(LED_EMMERSON, HIGH);
 
-  if (morning) {
-    ledEmersonMorning.on();
-  } else {
-    ledEmersonAfternoon.on();
+    if (morning) {
+      ledEmersonMorning.on();
+    } else {
+      ledEmersonAfternoon.on();
+    }
   }
 }
 
 // aciona os reles para desligar o efeito emmerson
 void EmmersonFinalAlarm() {
-  digitalWrite(LED_EMMERSON, LOW);
+  if (emersonValue == HIGH) {
+    digitalWrite(LED_EMMERSON, LOW);
 
-  if (morning) {
-    ledEmersonMorning.off();
-  } else {
-    ledEmersonAfternoon.off();
+    if (morning) {
+      ledEmersonMorning.off();
+    } else {
+      ledEmersonAfternoon.off();
+    }
+  }
+  if (!morning) {
     morning = true;
   }
 }
@@ -284,17 +281,13 @@ void EmmersonFinalAlarm() {
 void setupAlarms() {
   Alarm.alarmRepeat(0, 0, 0, LEDInitialAlarm);
   Alarm.alarmRepeat(0, 0, 0, EmmersonInitialAlarm);
-  Alarm.alarmRepeat(0, 0, 0, EmmersonFinalAlarm);
   Alarm.alarmRepeat(0, 0, 0, LEDFinalAlarm);
-  Alarm.alarmRepeat(0, 0, 0, EmmersonInitialAlarm);
   Alarm.alarmRepeat(0, 0, 0, EmmersonFinalAlarm);
   
   Alarm.disable(0);
   Alarm.disable(1);
   Alarm.disable(2);
   Alarm.disable(3);
-  Alarm.disable(4);
-  Alarm.disable(5);
 }
 
 // configuracao inicial dos reles
