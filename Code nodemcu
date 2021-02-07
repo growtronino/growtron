@@ -9,9 +9,9 @@
 #include <WidgetRTC.h>
 
 // BLYNK AUTHENTICATION
-char auth[] = "auth";
-char ssid[] = "wifi";
-char pass[] = "pass";
+char auth[] = "";
+char ssid[] = "";
+char pass[] = "";
 
 // DHT TEMPERATURE AND HUMIDIDTY
 #define DHTPIN D7     // definicao do pino do sensor de umidade e temperatura dht
