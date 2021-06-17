@@ -16,6 +16,7 @@ https://www.instagram.com/growtron.ino/
 * Modulo Rélé 4 canais
 * Sensor de Temperatura e Umidade DHT22
 * Blynk app
+* Arduino IDE
 
 ### Componentes opcionais:
 * Sensor capacitivo de umidade do solo
@@ -34,10 +35,17 @@ https://www.instagram.com/growtron.ino/
 
 ## Instalando as bibliotecas necessárias
 
-### Blynk
-Blynk é o app que o usuário configura o fotoperíodo do grow e faz a comunicação com a esp32
+Abra o gerenciador de bibliotecas em Ferramentas > Gerenciador de Biliotecas...
+E instale as seguintes bibliotecas:
 
-* Ferramentas > Gerenciador de Biliotecas...
-* Instale a biblioteca "Blynk by Volodymyr Shymanskyy"
+* "Blynk by Volodymyr Shymanskyy"
+* "DHT sensor library by Adafruit" e instale as bibliotecas extras necessárias
+* "Time by Michael Margolis"
+* "Time Alarms by Michael Margolis"
+* "Adafruit GFX Library by Adafruit" e instale as bibliotecas extras necessárias
+* "Adafruit SSD1306 by Adafruit"
+
+
+
 
 
