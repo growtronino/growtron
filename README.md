@@ -1,12 +1,23 @@
 # Growtron
 
 Grow automatizado para suas plantas
+* Liga e desliga as luzes do grow nos horários configurados no Blink App.
+* Monitora a temperatura e umidade ambiente
+* Monitora a umidade do solo
+* Exibe os valores no OLED
+* Mede a luminosidade emitida pelas luzes do grow
+
+Componentes necessários para executar o projeto:
 * ESP32 30 pinos
 * Modulo Rélé 4 canais
 * Sensor de Temperatura e Umidade DHT22
+* Blynk app
+
+Componentes opcionais:
 * Sensor capacitivo de umidade do solo
 * Sensor de luminosidade GY30
-* Blynk app
+* Display OLED 0.91"
+
 
 https://www.instagram.com/growtron.ino/
 
