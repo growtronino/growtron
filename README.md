@@ -1,6 +1,8 @@
 # Growtron
 
 Grow automatizado para suas plantas
+https://www.instagram.com/growtron.ino/
+
 Funcionalidades:
 * Liga e desliga as luzes do grow nos horários configurados no Blink App.
 * Monitora a temperatura e umidade ambiente
@@ -20,9 +22,6 @@ Componentes opcionais:
 * Sensor de luminosidade GY30
 * Display OLED 0.91"
 * ESP32-CAM
-
-
-https://www.instagram.com/growtron.ino/
 
 
 # Instalando a placa ESP32 no Arduino IDE
