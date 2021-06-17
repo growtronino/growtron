@@ -1,6 +1,6 @@
 # Growtron
 
-##Grow automatizado para suas plantas
+## Grow automatizado para suas plantas
 https://www.instagram.com/growtron.ino/
 
 Funcionalidades:
