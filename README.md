@@ -35,7 +35,7 @@ https://www.instagram.com/growtron.ino/
 ## Instalando as bibliotecas necessárias
 
 ### Blynk
-Blynk é o app que o usuário configura o grow e faz a comunicação com a esp32
+Blynk é o app que o usuário configura o fotoperíodo do grow e faz a comunicação com a esp32
 
 * Ferramentas > Gerenciador de Biliotecas...
 * Instale a biblioteca "Blynk by Volodymyr Shymanskyy"
