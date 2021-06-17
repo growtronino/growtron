@@ -11,13 +11,13 @@ https://www.instagram.com/growtron.ino/
 * Mede a luminosidade emitida pelas luzes do grow em Lux
 * Timelapse configuravel com a ESP32-CAM
 
-Componentes necessários para executar o projeto:
+### Componentes necessários para executar o projeto:
 * ESP32 30 pinos
 * Modulo Rélé 4 canais
 * Sensor de Temperatura e Umidade DHT22
 * Blynk app
 
-Componentes opcionais:
+### Componentes opcionais:
 * Sensor capacitivo de umidade do solo
 * Sensor de luminosidade GY30
 * Display OLED 0.91"
