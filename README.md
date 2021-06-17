@@ -11,7 +11,7 @@ Grow automatizado para suas plantas
 https://www.instagram.com/growtron.ino/
 
 
-#Instalando a placa ESP32 no Arduino IDE
+# Instalando a placa ESP32 no Arduino IDE
 
 * Inicie o Arduino IDE e abra a janela de Preferências
 * Inclua em "URLs Adicionais para Genrenciadores de Placas" o url da ESP32 https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json 
