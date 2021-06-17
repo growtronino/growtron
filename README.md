@@ -3,7 +3,7 @@
 Grow automatizado para suas plantas
 https://www.instagram.com/growtron.ino/
 
-Funcionalidades:
+### Funcionalidades:
 * Liga e desliga as luzes do grow nos horários configurados no Blink App.
 * Monitora a temperatura e umidade ambiente
 * Monitora a umidade do solo
