@@ -19,6 +19,7 @@ Componentes opcionais:
 * Sensor capacitivo de umidade do solo
 * Sensor de luminosidade GY30
 * Display OLED 0.91"
+* ESP32-CAM
 
 
 https://www.instagram.com/growtron.ino/
