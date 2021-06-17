@@ -31,3 +31,6 @@ Componentes opcionais:
 * Abra o Gerenciador de Placas em Ferramentas > Placa
 * Procure por esp32 by Espressif Systems e instale
 * Selecione sua a esp32 em Ferramentas > Placa > ESP32 Arduino > ESP32 Dev Module
+
+# Instalando as bibliotecas necessárias
+
