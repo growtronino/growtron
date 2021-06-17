@@ -1,11 +1,13 @@
 # Growtron
 
 Grow automatizado para suas plantas
+Funcionalidades:
 * Liga e desliga as luzes do grow nos horários configurados no Blink App.
 * Monitora a temperatura e umidade ambiente
 * Monitora a umidade do solo
-* Exibe os valores no OLED
-* Mede a luminosidade emitida pelas luzes do grow
+* Exibe as informações localmente no OLED
+* Mede a luminosidade emitida pelas luzes do grow em Lux
+* Timelapse configuravel com a ESP32-CAM
 
 Componentes necessários para executar o projeto:
 * ESP32 30 pinos
