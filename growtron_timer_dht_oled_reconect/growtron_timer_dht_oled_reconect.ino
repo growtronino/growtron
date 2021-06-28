@@ -99,38 +99,6 @@ BLYNK_CONNECTED() {
   Alarm.delay(1000);  // necessario para os alarmes ficarem sincronizados
 }
 
-BLYNK_WRITE(V1) {
-  emersonValue = param.asInt();
-  
-  if (emersonValue == LOW) {
-    Serial.println("Efeito Emerson desativado, desligar o deep red.");
-    tempEmersonValue = LOW;
-    ledEmersonMorning.off();
-    ledEmersonAfternoon.off();
-  } else {
-    // verificar se esta dentro do periodo para ligar ou desligar o efeito e seus feedbacks
-    long timeInSeconds = (hour() * 60 * 60) + (minute() * 60) + second();
-    if (timeInSeconds >= Alarm.read(1) && timeInSeconds <= Alarm.read(0) ||
-        timeInSeconds >= Alarm.read(2) && timeInSeconds <= Alarm.read(3)) {
-      Serial.println("Ativado, dentro do Efeito Emerson, ligar o deep red.");
-      tempEmersonValue = HIGH;
-      if (morning) {
-        ledEmersonMorning.on();
-        ledEmersonAfternoon.off();
-      } else {
-        ledEmersonMorning.off();
-        ledEmersonAfternoon.on();
-      }
-    } else {
-      Serial.println("Ativado, fora do Efeito Emerson, desligar o deep red.");
-      ledEmersonMorning.off();
-      ledEmersonAfternoon.off();
-      tempEmersonValue = LOW;
-    }
-  }
-  digitalWrite(LED_EMMERSON, tempEmersonValue);
-}
-
 // isto e chamado pelo blynk quando um virtual pin e alterado no app
 // nesse caso o v2 virtual pin 2 esta configurado no widget de time input
 // com start-stop time, para ter um alarme de inicio e fim do fotoperiodo
@@ -206,7 +174,7 @@ Serial.begin(9600);
   setSyncInterval(10 * 60);   // intervalo de sincronizacao do horario a cada 10 minutos(em segundos)
   setTime(hour(),minute(),second(),month(),day(),year());
   Serial.print("setup RTC Updated Time ");
-  timer.setInterval(1000L, dhtTimerEvent);    // Chamado a cada segundo
+  timer.setInterval(2500L, dhtTimerEvent);    // Chamado a cada 2.5 segundos
   timer.setInterval(5000L, alarmTimerEvent);  // display digital atualiza a cada 5 segundos
   digitalClockDisplay();
 
@@ -217,7 +185,7 @@ Serial.begin(9600);
   setupAlarms();
   setupRelays();
 
-  Blynk.syncVirtual(V1, V2);
+  Blynk.syncVirtual(V2);
 }
 
 // usando o blynk e importante nao usar o loop
@@ -298,19 +266,31 @@ void setupRelays() {
 
 void syncRelays(long timeInSeconds) {
   int ledsValue, ledsEmersonValue;
-  
-  if (timeInSeconds > Alarm.read(0) && timeInSeconds < Alarm.read(3)) {
-    Serial.println("Dentro do Fotoperiodo, ligar as luzes.");
-    ledsValue = HIGH;
-    ledsEmersonValue = HIGH;
-    ledMain.on();
-  } else {
-    Serial.println("Fora do Fotoperiodo, desligar as luzes.");
-    ledsValue = LOW;
-    ledsEmersonValue = LOW;
-    ledMain.off();
-  }
 
+  if (Alarm.read(0) < Alarm.read(3)) {
+    Serial.println("Os alarmes estao no mesmo dia.");
+    if (timeInSeconds > Alarm.read(0) && timeInSeconds < Alarm.read(3)) {
+      ledsValue = HIGH;
+      ledsEmersonValue = HIGH;
+      ledMain.on();
+    } else {
+      ledsValue = LOW;
+      ledsEmersonValue = LOW;
+      ledMain.off();
+    }
+  } else {
+    Serial.println("Os alarmes estao em dias diferentes.");
+    if (timeInSeconds > Alarm.read(3) && timeInSeconds < Alarm.read(0)) {
+      ledsValue = LOW;
+      ledsEmersonValue = LOW;
+      ledMain.off();
+    } else {
+      ledsValue = HIGH;
+      ledsEmersonValue = HIGH;
+      ledMain.on();
+    }
+  }
+  
   digitalWrite(LEDS, ledsValue);
   digitalWrite(LED_EMMERSON, ledsEmersonValue);  
 }
