@@ -15,7 +15,7 @@ https://www.instagram.com/growtron.ino/
 ### Componentes necessários para executar o projeto:
 * ESP32 30 pinos
 * Modulo Rélé 
-* Sensor de Temperatura e Umidade DHT22
+* Sensor de Temperatura e Umidade DHT22 ou DHT11
 * Blynk app
 * Arduino IDE
 
