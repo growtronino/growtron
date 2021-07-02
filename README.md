@@ -54,9 +54,9 @@ https://play.google.com/store/apps/details?id=cc.blynk&hl=pt_BR&gl=US
 Crie um novo projeto e siga os passos. Um token será gerado e enviado ao seu email, você deve inseri-lo na variavel "tokenid".
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/growtronino/tentativanodemcu/master/tutorial_03.jpg" width="310" title="passo 1">
-  <img src="https://raw.githubusercontent.com/growtronino/tentativanodemcu/master/tutorial_02.jpg" width="310" title="passo 2">
-  <img src="https://raw.githubusercontent.com/growtronino/tentativanodemcu/master/tutorial_01.jpg" width="310" title="passo 3">
+  <img src="https://raw.githubusercontent.com/growtronino/tentativanodemcu/master/tutorial_03.jpg" width="300" title="passo 1">
+  <img src="https://raw.githubusercontent.com/growtronino/tentativanodemcu/master/tutorial_02.jpg" width="300" title="passo 2">
+  <img src="https://raw.githubusercontent.com/growtronino/tentativanodemcu/master/tutorial_01.jpg" width="300" title="passo 3">
 </p>
 
 Adicione os widgets necessários para o controle de fotoperíodo e monitoramento de temperatura e umidade ambientes. Os widgets custam energias, você começa com 2000 energias, o que já é suficiente para executar o tutorial.
