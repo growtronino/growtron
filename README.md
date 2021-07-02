@@ -51,7 +51,7 @@ E instale as seguintes bibliotecas:
 Baixe o aplicativo Blynk no seu smartphone
 https://play.google.com/store/apps/details?id=cc.blynk&hl=pt_BR&gl=US
 
-Crie um novo projeto e siga os passos. Um token será gerado e enviado ao seu email, você deve inseri-lo na variavel "tokenid".
+Crie um novo projeto e siga os passos. Um token será gerado e enviado ao seu email, você deve inseri-lo na variavel "auth".
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/growtronino/tentativanodemcu/master/tutorial_03.jpg" width="250" title="passo 1">
