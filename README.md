@@ -46,6 +46,11 @@ E instale as seguintes bibliotecas:
 * "Adafruit GFX Library by Adafruit" e instale as bibliotecas extras necessárias
 * "Adafruit SSD1306 by Adafruit"
 
+## Configurando o Blynk
+
+Baixe o aplicativo Blynk no seu smartphone
+https://play.google.com/store/apps/details?id=cc.blynk&hl=pt_BR&gl=US
+
 
 
 
