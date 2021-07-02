@@ -66,6 +66,6 @@ Adicione os widgets necessários para o controle de fotoperíodo e monitoramento
 
 Siga o diagrama para conectar o sensor e o relé a ESP32. 
 
-<img src="growtron_01_bb.png" width="750" title="passo 1">
+<img src="growtron_01_bb.png" width="850" title="passo 1">
 
 
