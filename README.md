@@ -62,4 +62,9 @@ Crie um novo projeto e siga os passos. Um token será gerado e enviado ao seu em
 Adicione os widgets necessários para o controle de fotoperíodo e monitoramento de temperatura e umidade ambientes. Os widgets custam energias, você começa com 2000 energias, o que já é suficiente para executar o tutorial.
 
 
+## Fazendo as conexões 
+
+Siga o diagrama para conectar o sensor e o relé a ESP32. 
+<img src="growtron_01_bb.png" width="250" title="passo 1">
+
 
