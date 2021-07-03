@@ -54,13 +54,26 @@ https://play.google.com/store/apps/details?id=cc.blynk&hl=pt_BR&gl=US
 Crie um novo projeto e siga os passos. Um token será gerado e enviado ao seu email, você deve inseri-lo na variavel "auth".
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/growtronino/tentativanodemcu/master/tutorial_03.jpg" width="250" title="passo 1">
-  <img src="https://raw.githubusercontent.com/growtronino/tentativanodemcu/master/tutorial_02.jpg" width="250" title="passo 2">
-  <img src="https://raw.githubusercontent.com/growtronino/tentativanodemcu/master/tutorial_01.jpg" width="250" title="passo 3">
+  <img src="tutorial_blynk_00.jpg" width="250" title="passo 1">
+  <img src="tutorial_blynk_01.jpg" width="250" title="passo 2">
+  <img src="tutorial_blynk_02.jpg" width="250" title="passo 3">
 </p>
 
 Adicione os widgets necessários para o controle de fotoperíodo e monitoramento de temperatura e umidade ambientes. Os widgets custam energias, você começa com 2000 energias, o que já é suficiente para executar o tutorial.
 
+<p align="center">
+  <img src="tutorial_blynk_03.jpg" width="250" title="passo 4">
+  <img src="tutorial_blynk_04.jpg" width="250" title="passo 5">
+  <img src="tutorial_blynk_05.jpg" width="250" title="passo 6">
+</p>
+
+Adicione o widget Real Time Clock e de Play:
+
+<p align="center">
+  <img src="tutorial_blynk_06.jpg" width="250" title="passo 7">
+  <img src="tutorial_blynk_07.jpg" width="250" title="passo 8">
+  <img src="tutorial_blynk_08.jpg" width="250" title="passo 9">
+</p>
 
 ## Fazendo as conexões 
 
