@@ -59,7 +59,7 @@ Crie um novo projeto e siga os passos. Um token será gerado e enviado ao seu em
   <img src="tutorial_blynk_02.jpg" width="250" title="passo 3">
 </p>
 
-Adicione os widgets necessários para o controle de fotoperíodo e monitoramento de temperatura e umidade ambientes. Os widgets custam energias, você começa com 2000 energias, o que já é suficiente para executar o tutorial.
+Adicione dois widgets labeled value para monitorar a temperatura e a umidade ambientes. Os widgets custam energias, você começa com 2000 energias, o que já é suficiente para executar o tutorial.
 
 <p align="center">
   <img src="tutorial_blynk_03.jpg" width="250" title="passo 4">
