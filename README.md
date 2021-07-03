@@ -64,11 +64,7 @@ Adicione os widgets necessários para o controle de fotoperíodo e monitoramento
 
 ## Fazendo as conexões 
 
-Siga o diagrama para conectar o sensor de umidade e temperatura DHT a ESP32:
-
-<img src="conexoes_growtron_dht.png" width="850" title="passo 1">
-
-Siga o diagrama para conectar o relé a ESP32:
+Siga o diagrama para conectar o sensor de umidade e temperatura DHT e o relé a ESP32:
 
 <img src="conexoes_growtron_dht_rele.png" width="850" title="passo 2">
 
