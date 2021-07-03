@@ -51,7 +51,7 @@ E instale as seguintes bibliotecas:
 Baixe o aplicativo Blynk no seu smartphone
 https://play.google.com/store/apps/details?id=cc.blynk&hl=pt_BR&gl=US
 
-Crie um novo projeto e siga os passos. Um token será gerado e enviado ao seu email, você deve inseri-lo na variavel "auth".
+Crie um novo projeto e siga os passos. Um token será gerado e enviado ao seu email, você deve inseri-lo na variavel "auth":
 
 <p align="center">
   <img src="tutorial_blynk_00.jpg" width="250" title="passo 1">
@@ -59,7 +59,7 @@ Crie um novo projeto e siga os passos. Um token será gerado e enviado ao seu em
   <img src="tutorial_blynk_02.jpg" width="250" title="passo 3">
 </p>
 
-Adicione dois widgets labeled value para monitorar a temperatura e a umidade ambientes. Os widgets custam energias, você começa com 2000 energias, o que já é suficiente para executar o tutorial.
+Adicione dois widgets labeled value para monitorar a temperatura e a umidade ambientes. Os widgets custam energias, você começa com 2000 energias, o que já é suficiente para executar o tutorial:
 
 <p align="center">
   <img src="tutorial_blynk_03.jpg" width="250" title="passo 4">
