@@ -52,6 +52,7 @@ Baixe o aplicativo Blynk no seu smartphone
 https://play.google.com/store/apps/details?id=cc.blynk&hl=pt_BR&gl=US
 
 Utilize esse código como ponto de partida, preencha os dados da sua rede WIFI em "ssid" e senha em "pass" https://github.com/growtronino/growtron/tree/master/tutorial_growtron/blynk_dht
+
 Crie um novo projeto no Blynk e siga os passos a seguir. Um token será gerado e enviado ao seu email, você deve inseri-lo na variavel "auth":
 
 <p align="center">
