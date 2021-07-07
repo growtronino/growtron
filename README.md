@@ -77,6 +77,17 @@ Adicione o widget Real Time Clock e de Play:
   <img src="tutorial_blynk_08.jpg" width="250" title="passo 9">
 </p>
 
+Agora você tem o monitoramento em tempo real da umidade e temperatura ambiente do seu Grow. O próximo passo é conectar o relé ao ESP32 e inserir o widget de Time Input no Blynk, que irá ser a entrada do usuário para inserir o fotoperíodo do Grow.
+
+Utilize este código como ponto de partida para continuar o tutorial, preencha os dados da sua rede WIFI em "ssid", senha em "pass" e o token do blynk em "auth". 
+https://github.com/growtronino/growtron/tree/master/tutorial_growtron/blynk_dht
+
+<p align="center">
+  <img src="tutorial_blynk_09.jpg" width="250" title="passo 10">
+  <img src="tutorial_blynk_10.jpg" width="250" title="passo 11">
+  <img src="tutorial_blynk_11.jpg" width="250" title="passo 12">
+</p>
+
 ## Fazendo as conexões 
 
 Siga o diagrama para conectar o sensor de umidade e temperatura DHT e o relé a ESP32:
